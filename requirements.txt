@@ -3,3 +3,9 @@ pandas
 scikit-learn
 matplotlib
 seaborn
+textblob
+wordcloud
+plotly
+spacy
+nbformat>=4.2.0
+nltk
