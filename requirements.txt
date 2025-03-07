@@ -9,3 +9,5 @@ plotly
 spacy
 nbformat>=4.2.0
 nltk
+numpy
+scipy
