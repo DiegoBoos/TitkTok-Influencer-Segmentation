@@ -1,5 +1,3 @@
-# TikTok Influencer Segmentation
-
 ## Project Overview
 
 This project applies machine learning techniques to segment TikTok influencers based on their engagement metrics, follower counts, and content production patterns. By identifying distinct influencer profiles, marketers and content strategists can develop more targeted approaches for influencer marketing campaigns.
