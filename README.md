@@ -36,9 +36,6 @@ This analysis identified **five influencer segments:**
 
 ## **💻 Running the Code**
 1. **Clone the repository**
-   ```sh
-   git clone https://github.com/yourusername/yourrepository.git
-   ```
 2. **Set up a virtual environment**
    ```sh
    python -m venv venv
