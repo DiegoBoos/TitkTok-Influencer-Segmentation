@@ -1,8 +1,7 @@
 # utils.py
-from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
 import matplotlib.pyplot as plt
+import pandas as pd
 
 def clean_data(df):
     """Clean the TikTok influencer dataset"""
@@ -16,7 +15,30 @@ def clean_data(df):
     
     # Handle missing values
     df_clean['biography'] = df_clean['biography'].fillna('')
-    df_clean.drop('create_time', axis=1, inplace=True)
+    # Convert timestamp to datetime
+    df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+    # Convert IDs to string (since they're identifiers)
+    id_columns = ['account_id', 'id']
+    df[id_columns] = df[id_columns].astype(str)
+
+    # Convert URLs to category (since they're repeated strings)
+    url_columns = ['bio_link', 'url', 'profile_pic_url']
+    df[url_columns] = df[url_columns].astype('category')
+
+    # Convert text fields to category
+    text_columns = ['nickname']
+    df[text_columns] = df[text_columns].astype('category')
+
+    # Keep biography as string (since it's likely unique free text)
+    # Keep engagement rates as float64 (for precision)
+    # Keep numeric counts as int64
+    # Keep is_verified as boolean
+    # Drop create_time since it's all null
+    df = df.drop('create_time', axis=1)
+
+    # Convert top_videos to appropriate type (assuming it's JSON-like string data)
+    df['top_videos'] = df['top_videos'].astype('category')
     
     return df_clean
 
@@ -38,23 +60,23 @@ def remove_outliers_iqr(df, columns):
     
     return df_no_outliers
 
-def find_optimal_clusters(scaled_features, max_clusters=10):
+def find_optimal_clusters(scaled_features):
     """Find the optimal number of clusters using multiple methods"""
     wcss = []
     
-    for i in range(2, max_clusters + 1):
+    for i in range(2, 11):
         kmeans = KMeans(n_clusters=i, init='k-means++', max_iter=300, n_init=10, random_state=42)
         kmeans.fit(scaled_features)
         wcss.append(kmeans.inertia_)
         
     return wcss
 
-def plot_cluster_metrics(wcss, max_clusters=10):
+def plot_cluster_metrics(wcss):
     """Plot the WCSS scores"""
     plt.figure(figsize=(16, 6))
 
     plt.subplot(1, 2, 1)
-    plt.plot(range(2, max_clusters + 1), wcss, marker='o', linestyle='-', color='blue')
+    plt.plot(range(2, 11), wcss, marker='o', linestyle='-', color='blue')
     plt.title('Elbow Method for Optimal k', fontsize=14)
     plt.xlabel('Number of Clusters', fontsize=12)
     plt.ylabel('WCSS', fontsize=12)
